@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import web3auth from "./utils/web3auth";
 import { ethers } from "ethers";
 import { getTransactionDetails, TransactionDetails } from "./utils/blockscout";
-import { IDKitWidget } from '@worldcoin/idkit';
+import { IDKitWidget } from "@worldcoin/idkit";
+import { uploadImageToAkave } from "./utils/akaveUpload"; // Akave upload utility
 
 const CONTRACT_ADDRESS = "YOUR_DEPLOYED_CONTRACT_ADDRESS";
 const ABI = [
@@ -13,9 +14,9 @@ const ABI = [
 ];
 
 const WorldIDVerification = () => {
-  const handleSuccess = (result) => {
+  const handleSuccess = (result: any) => {
     // Handle successful verification here
-    console.log('Verification successful:', result);
+    console.log("Verification successful:", result);
   };
 
   return (
@@ -27,7 +28,7 @@ const WorldIDVerification = () => {
             onSuccess={handleSuccess}
         >
           {({ open }) => (
-              <button onClick={open}>
+              <button onClick={open} className="bg-blue-500 text-white px-6 py-2 rounded">
                 Verify with World ID
               </button>
           )}
@@ -46,6 +47,10 @@ export default function Home() {
   const [recipient, setRecipient] = useState<string>("");
   const [amount, setAmount] = useState<string>("");
   const [message, setMessage] = useState<string>("");
+
+  // State for Akave image upload
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [uploadMessage, setUploadMessage] = useState<string>("");
 
   // Initialize Web3Auth
   useEffect(() => {
@@ -113,6 +118,21 @@ export default function Home() {
       setMessage(`Transaction sent! Hash: ${tx.hash}`);
     } catch (error) {
       setMessage((error as Error).message);
+    }
+  };
+
+  // Handle image upload to Akave
+  const handleImageUpload = async () => {
+    if (!imageFile) {
+      setUploadMessage("Please select an image file.");
+      return;
+    }
+
+    try {
+      const response = await uploadImageToAkave(imageFile);
+      setUploadMessage(`Image uploaded successfully: ${response.url}`);
+    } catch (error) {
+      setUploadMessage("Failed to upload the image. Please try again.");
     }
   };
 
@@ -203,6 +223,24 @@ export default function Home() {
                 </button>
                 {message && <p className="mt-4">{message}</p>}
               </div>
+
+              {/* Akave Image Upload */}
+              <div className="mb-6">
+                <h2 className="text-lg font-semibold mb-2">Upload Profile Image</h2>
+                <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+                    className="p-2 border rounded mb-2 w-full"
+                />
+                <button
+                    onClick={handleImageUpload}
+                    className="bg-green-500 text-white px-4 py-2 rounded w-full"
+                >
+                  Upload Image
+                </button>
+                {uploadMessage && <p className="mt-4">{uploadMessage}</p>}
+              </div>
             </div>
         ) : (
             <button
@@ -212,9 +250,7 @@ export default function Home() {
               Login with Web3Auth
             </button>
         )}
-        <div>
-          {WorldIDVerification()}
-        </div>
+        <div>{WorldIDVerification()}</div>
       </div>
   );
 }
