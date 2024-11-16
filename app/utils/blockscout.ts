@@ -2,7 +2,7 @@ import axios from "axios";
 
 const BLOCKSCOUT_API_BASE = "https://blockscout.com/eth/mainnet/api";
 
-interface TransactionDetails {
+export interface TransactionDetails {
   hash: string;
   from: string;
   to: string;
@@ -11,9 +11,11 @@ interface TransactionDetails {
   gasPrice: string;
 }
 
-export const getTransactionDetails = async (txHash: string): Promise<TransactionDetails> => {
+export const getTransactionDetails = async (
+  txHash: string
+): Promise<TransactionDetails> => {
   try {
-    const response = await axios.get(`${BLOCKSCOUT_API_BASE}`, {
+    const response = await axios.get(BLOCKSCOUT_API_BASE, {
       params: {
         module: "transaction",
         action: "gettxinfo",
@@ -31,3 +33,4 @@ export const getTransactionDetails = async (txHash: string): Promise<Transaction
     throw error;
   }
 };
+C

@@ -1,13 +1,24 @@
 import { Web3Auth } from "@web3auth/modal";
-import { CHAIN_NAMESPACES } from "@web3auth/base";
+import { CHAIN_CONFIGS } from "./chainConfigs"; // Import the chain configurations
 
-const web3auth = new Web3Auth({
-  clientId: "YOUR_WEB3AUTH_CLIENT_ID", // Replace with your Web3Auth client ID
-  chainConfig: {
-    chainNamespace: CHAIN_NAMESPACES.EIP155,
-    chainId: "0x89", // Polygon Mainnet
-    rpcTarget: "https://polygon-rpc.com", // Polygon RPC
-  },
-});
+const initWeb3Auth = async (selectedChain: keyof typeof CHAIN_CONFIGS) => {
+  const chainConfig = CHAIN_CONFIGS[selectedChain];
 
-export default web3auth;
+  const web3auth = new Web3Auth({
+    clientId: "BMFV9XGUBPPUkPJvKA_LScW5ZWeqqNiW1lAyZH4e8Yf4Jc0MEY3HfG6bFnSpDbW4zXAIncT0xTQbD9NAUxb6B3Y", // Replace with your Web3Auth client ID
+    chainConfig: {
+      chainNamespace: chainConfig.chainNamespace,
+      chainId: chainConfig.chainId,
+      rpcTarget: chainConfig.rpcTarget,
+      displayName: chainConfig.displayName,
+      blockExplorerUrl: chainConfig.blockExplorerUrl,
+      ticker: chainConfig.ticker,
+      tickerName: chainConfig.tickerName,
+    },
+  });
+
+  await web3auth.initModal();
+  return web3auth;
+};
+
+export default initWeb3Auth;

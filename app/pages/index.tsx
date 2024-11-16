@@ -1,63 +1,53 @@
-import { useEffect, useState } from "react";
-import web3auth from "../utils/web3auth";
-import { ethers } from "ethers";
+"use client";
+
+import { useState } from "react";
+import initWeb3Auth from "../utils/web3auth";
+import { CHAIN_CONFIGS } from "../utils/chainConfigs";
 
 export default function Home() {
+  const [selectedChain, setSelectedChain] = useState<keyof typeof CHAIN_CONFIGS>("polygon");
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
-  const [balance, setBalance] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    const initWeb3Auth = async () => {
-      try {
-        await web3auth.initModal();
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Web3Auth initialization error:", error);
-      }
-    };
-
-    initWeb3Auth();
-  }, []);
 
   const login = async () => {
     try {
+      const web3auth = await initWeb3Auth(selectedChain);
       const provider = await web3auth.connect();
-      const ethersProvider = new ethers.providers.Web3Provider(provider);
-      const signer = ethersProvider.getSigner();
-      const address = await signer.getAddress();
-      const balanceInWei = await ethersProvider.getBalance(address);
-
-      setWalletAddress(address);
-      setBalance(ethers.utils.formatEther(balanceInWei));
+      const accounts = await provider.request({ method: "eth_accounts" });
+      if (accounts.length === 0) {
+        throw new Error("No accounts found");
+      }
+      setWalletAddress(accounts[0] as string);
     } catch (error) {
       console.error("Login error:", error);
     }
   };
 
-  const logout = async () => {
-    try {
-      await web3auth.logout();
-      setWalletAddress(null);
-      setBalance(null);
-    } catch (error) {
-      console.error("Logout error:", error);
-    }
-  };
-
   return (
-    <div>
-      <h1>Web3Auth Wallet</h1>
-      {isLoading ? (
-        <p>Loading...</p>
-      ) : walletAddress ? (
-        <div>
-          <p>Wallet Address: {walletAddress}</p>
-          <p>Balance: {balance} ETH</p>
-          <button onClick={logout}>Logout</button>
-        </div>
-      ) : (
-        <button onClick={login}>Login with Web3Auth</button>
+    <div className="flex flex-col items-center justify-center min-h-screen p-8">
+      <h1 className="text-3xl font-bold mb-6">Multi-Chain Wallet</h1>
+
+      <label htmlFor="chain-select" className="text-lg mb-2">Select Chain:</label>
+      <select
+        id="chain-select"
+        value={selectedChain}
+        onChange={(e) => setSelectedChain(e.target.value as keyof typeof CHAIN_CONFIGS)}
+        className="p-2 border rounded mb-4"
+      >
+        {Object.entries(CHAIN_CONFIGS).map(([key, config]) => (
+          <option key={key} value={key}>
+            {config.displayName}
+          </option>
+        ))}
+      </select>
+
+      <button onClick={login} className="bg-blue-500 text-white px-6 py-2 rounded mb-4">
+        Login with Web3Auth
+      </button>
+
+      {walletAddress && (
+        <p className="text-lg">
+          <strong>Wallet Address:</strong> {walletAddress}
+        </p>
       )}
     </div>
   );
