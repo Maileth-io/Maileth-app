@@ -118,4 +118,13 @@ export const CHAIN_CONFIGS = {
     ticker: "ETH",
     tickerName: "Ethereum",
   },
+  celo: {
+    chainNamespace: CHAIN_NAMESPACES.EIP155,
+    chainId: "0xa4ec", // Celo Mainnet Chain ID (42220 in hexadecimal)
+    rpcTarget: "https://forno.celo.org", // Celo RPC
+    displayName: "Celo Mainnet",
+    blockExplorerUrl: "https://explorer.celo.org",
+    ticker: "CELO",
+    tickerName: "Celo",
+  },
 };
