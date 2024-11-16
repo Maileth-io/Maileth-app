@@ -83,10 +83,10 @@ export const CHAIN_CONFIGS = {
     tickerName: "xDai",
   },
   mina: {
-    chainNamespace: CHAIN_NAMESPACES.EIP155,
-    chainId: "0xXXXX", // Replace with Mina Chain ID
-    rpcTarget: "https://mina.rpc.url", // Replace with Mina RPC
-    displayName: "Mina",
+    chainNamespace: CHAIN_NAMESPACES.OTHER, // Mina is not EVM-based
+    chainId: "1", // Mina's mainnet chain ID
+    rpcTarget: "https://proxy.mainnet.minaexplorer.com/rpc", // Mina RPC endpoint
+    displayName: "Mina Protocol",
     blockExplorerUrl: "https://minaexplorer.com",
     ticker: "MINA",
     tickerName: "Mina",
