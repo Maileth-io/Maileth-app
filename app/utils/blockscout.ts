@@ -33,4 +33,3 @@ export const getTransactionDetails = async (
     throw error;
   }
 };
-C
