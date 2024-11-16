@@ -1,16 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import { ethers } from "ethers";
 import initWeb3Auth from "../utils/web3auth";
 import { CHAIN_CONFIGS } from "../utils/chainConfigs";
-import { swapTokens } from "../utils/swap";
+import { uniswapSwapTokens } from "../utils/uniswap";
 
 export default function Home() {
   const [selectedChain, setSelectedChain] = useState<keyof typeof CHAIN_CONFIGS>("polygon");
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
 
-  // Token Swap State
-  const [routerName, setRouterName] = useState<"uniswap" | "coswap">("uniswap");
+  // Uniswap Swap State
   const [amountIn, setAmountIn] = useState<string>("");
   const [amountOutMin, setAmountOutMin] = useState<string>("");
   const [path, setPath] = useState<string[]>([]); // Array of token addresses
@@ -33,7 +33,7 @@ export default function Home() {
     }
   };
 
-  // Perform Token Swap
+  // Perform Token Swap using Uniswap
   const swap = async () => {
     try {
       if (!window.ethereum) throw new Error("MetaMask not found");
@@ -41,9 +41,9 @@ export default function Home() {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       await provider.send("eth_requestAccounts", []); // Request wallet connection
 
-      await swapTokens(provider, routerName, amountIn, amountOutMin, path, recipient, deadline);
+      await uniswapSwapTokens(provider, amountIn, amountOutMin, path, recipient, deadline);
 
-      setSwapMessage(`Swap on ${routerName} successful!`);
+      setSwapMessage("Swap successful!");
     } catch (error) {
       setSwapMessage(`Swap error: ${(error as Error).message}`);
     }
@@ -51,10 +51,12 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-8">
-      <h1 className="text-3xl font-bold mb-6">Multi-Chain Wallet with Swap</h1>
+      <h1 className="text-3xl font-bold mb-6">Multi-Chain Wallet with Uniswap Swap</h1>
 
       {/* Chain Selection */}
-      <label htmlFor="chain-select" className="text-lg mb-2">Select Chain:</label>
+      <label htmlFor="chain-select" className="text-lg mb-2">
+        Select Chain:
+      </label>
       <select
         id="chain-select"
         value={selectedChain}
@@ -79,23 +81,10 @@ export default function Home() {
         </p>
       )}
 
-      {/* Swap Tokens */}
+      {/* Uniswap Token Swap */}
       <div className="w-full max-w-md">
-        <h2 className="text-xl font-bold mb-4">Swap Tokens</h2>
+        <h2 className="text-xl font-bold mb-4">Uniswap Token Swap</h2>
 
-        {/* Router Selection */}
-        <label htmlFor="router-select" className="block text-lg mb-2">Select Router:</label>
-        <select
-          id="router-select"
-          value={routerName}
-          onChange={(e) => setRouterName(e.target.value as "uniswap" | "coswap")}
-          className="p-2 border rounded mb-4 w-full"
-        >
-          <option value="uniswap">Uniswap</option>
-          <option value="coswap">Coswap</option>
-        </select>
-
-        {/* Token Swap Inputs */}
         <input
           type="text"
           placeholder="Amount In"
@@ -128,7 +117,7 @@ export default function Home() {
           Swap
         </button>
 
-        {/* Swap Message */}
+        {/* Swap Feedback */}
         {swapMessage && <p className="text-center text-lg">{swapMessage}</p>}
       </div>
     </div>
