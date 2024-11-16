@@ -42,6 +42,42 @@ export const swapTokens = async (
       return;
     }
 
+    if (routerName === "1inch") {
+      // 1inch Cross-Chain Swap Logic
+      const apiEndpoint = ROUTER_CONFIGS["1inch"].apiEndpoint;
+      const chainId = (await provider.getNetwork()).chainId;
+
+      // Fetch 1inch quote
+      const quoteResponse = await axios.get(`${apiEndpoint}/${chainId}/swap`, {
+        params: {
+          fromTokenAddress: path[0],
+          toTokenAddress: path[path.length - 1],
+          amount: ethers.utils.parseUnits(amountIn).toString(),
+          fromAddress: recipient,
+          slippage: 1, // 1% slippage
+          disableEstimate: false,
+        },
+      });
+
+      const { tx } = quoteResponse.data;
+
+      console.log("1inch Quote:", quoteResponse.data);
+
+      // Execute the transaction
+      const signer = provider.getSigner();
+      const txResponse = await signer.sendTransaction({
+        to: tx.to,
+        data: tx.data,
+        value: ethers.BigNumber.from(tx.value || "0"),
+      });
+
+      console.log("1inch Swap Transaction Hash:", txResponse.hash);
+      await txResponse.wait();
+
+      console.log("1inch Swap Successful");
+      return;
+    }
+
     // Uniswap Logic
     const signer = provider.getSigner();
     const routerConfig = ROUTER_CONFIGS[routerName];

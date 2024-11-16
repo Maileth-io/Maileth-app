@@ -11,4 +11,8 @@ export const ROUTER_CONFIGS = {
     name: "CoW Swap",
     apiEndpoint: "https://api.cow.fi/mainnet/api/v1", // Replace with the testnet endpoint if needed
   },
+  "1inch": {
+    name: "1inch",
+    apiEndpoint: "https://api.1inch.io/v5.0",
+  },
 };
