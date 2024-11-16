@@ -46,4 +46,76 @@ export const CHAIN_CONFIGS = {
     ticker: "ETH",
     tickerName: "Ethereum",
   },
+  ethereum: {
+    chainNamespace: CHAIN_NAMESPACES.EIP155,
+    chainId: "0x1", // Ethereum Mainnet Chain ID (1 in hexadecimal)
+    rpcTarget: "https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID", // Replace with your Infura Project RPC
+    displayName: "Ethereum Mainnet",
+    blockExplorerUrl: "https://etherscan.io",
+    ticker: "ETH",
+    tickerName: "Ethereum",
+  },
+  optimism: {
+    chainNamespace: CHAIN_NAMESPACES.EIP155,
+    chainId: "0xa", // Optimism Chain ID (10 in hexadecimal)
+    rpcTarget: "https://mainnet.optimism.io", // Optimism RPC
+    displayName: "Optimism",
+    blockExplorerUrl: "https://optimistic.etherscan.io",
+    ticker: "ETH",
+    tickerName: "Ethereum",
+  },
+  polygonZkEVM: {
+    chainNamespace: CHAIN_NAMESPACES.EIP155,
+    chainId: "0x144", // Polygon zkEVM Chain ID (324 in hexadecimal)
+    rpcTarget: "https://zkevm-rpc.com", // Polygon zkEVM RPC
+    displayName: "Polygon zkEVM",
+    blockExplorerUrl: "https://zkevm.polygonscan.com",
+    ticker: "ETH",
+    tickerName: "Ethereum",
+  },
+  xdai: {
+    chainNamespace: CHAIN_NAMESPACES.EIP155,
+    chainId: "0x64", // xDai Chain ID (100 in hexadecimal)
+    rpcTarget: "https://rpc.gnosischain.com", // xDai RPC
+    displayName: "xDai",
+    blockExplorerUrl: "https://blockscout.com/xdai/mainnet",
+    ticker: "xDai",
+    tickerName: "xDai",
+  },
+  mina: {
+    chainNamespace: CHAIN_NAMESPACES.EIP155,
+    chainId: "0xXXXX", // Replace with Mina Chain ID
+    rpcTarget: "https://mina.rpc.url", // Replace with Mina RPC
+    displayName: "Mina",
+    blockExplorerUrl: "https://minaexplorer.com",
+    ticker: "MINA",
+    tickerName: "Mina",
+  },
+  mantle: {
+    chainNamespace: CHAIN_NAMESPACES.EIP155,
+    chainId: "0x1389", // Mantle Chain ID (5000 in hexadecimal)
+    rpcTarget: "https://rpc.mantle.xyz", // Mantle RPC
+    displayName: "Mantle",
+    blockExplorerUrl: "https://explorer.mantle.xyz",
+    ticker: "MNT",
+    tickerName: "Mantle",
+  },
+  bsc: {
+    chainNamespace: CHAIN_NAMESPACES.EIP155,
+    chainId: "0x38", // Binance Smart Chain Mainnet ID (56 in hexadecimal)
+    rpcTarget: "https://bsc-dataseed.binance.org", // BSC RPC
+    displayName: "Binance Smart Chain",
+    blockExplorerUrl: "https://bscscan.com",
+    ticker: "BNB",
+    tickerName: "Binance Coin",
+  },
+  scroll: {
+    chainNamespace: CHAIN_NAMESPACES.EIP155,
+    chainId: "0x2710", // Scroll Alpha Testnet Chain ID (10000 in hexadecimal)
+    rpcTarget: "https://scroll.io/rpc", // Scroll RPC
+    displayName: "Scroll Alpha",
+    blockExplorerUrl: "https://scroll.io/explorer",
+    ticker: "ETH",
+    tickerName: "Ethereum",
+  },
 };
